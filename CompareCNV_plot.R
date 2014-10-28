@@ -1,15 +1,15 @@
 args = commandArgs(TRUE)
 #args[1] is the cnv result; args[2]is the patient's directory; args[3] is outDir
-cnv = read.table(file=args[1],as.is=T,head=T)
-temp = read.table(file=args[1],as.is=T,head=F)
+cnv = read.table(file=args[1],as.is=T,head=T) #header是指定是否原文件是否包含列名,默认为F
+temp = read.table(file=args[1],as.is=T,head=F) #防止字符向量变为factors
 samp= c()
-for(i in 5:ncol(temp)){
+for(i in 5:ncol(temp)){ 
   samp[i-4] = as.character(temp[1,i])
 }
 bindata=c()
 for(i in 1:length(samp)){
    bindata[i]=paste(paste(args[2],paste(samp[i],"05.CNV/Single",sep="/"),sep="/"),paste(samp[i],".bin.txt",sep=""),sep="/")
-}
+} #paste()将向量中的元素对应的链接起来，元素之间用sep来连接
 temp1 = read.table(file=bindata[1],as.is=T,head=T)
 chr=c()
 pos=c()
@@ -20,7 +20,7 @@ for(i in 1:nrow(temp1)){
   }
   pos[i] = as.numeric(strsplit(strsplit(temp1[i,1],split=":")[[1]][2], split="-")[[1]][1])
 }
-temp11 = cbind(temp1,chr,pos)
+temp11 = cbind(temp1,chr,pos) #将矩阵横向合并成一个大矩阵
 myorder = order(temp11[,6],temp11[,7])
 temp1 = temp11[myorder,]
 # the position of each gene
